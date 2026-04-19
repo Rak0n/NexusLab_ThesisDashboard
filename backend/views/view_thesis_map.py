@@ -127,7 +127,7 @@ def render():
     # --- 2. RENDER NOTE MARKDOWN ---
     st.subheader("📝 Struttura e Appunti della Tesi")
     
-    note_path = "data_vault/notes/tesi_map.md"
+    note_path = "backend/data_vault/notes/tesi_map.md"
     os.makedirs(os.path.dirname(note_path), exist_ok=True)
     
     # Se il file non esiste, crea un template di base
