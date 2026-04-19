@@ -1,7 +1,7 @@
  🧪 Mappa Architetturale della Tesi (Data Workflow)
 
 
-## 1. 🧫 Feedstocks (Materie Prime) & Caratterizzazione
+## 1.  Feedstocks (Materie Prime) & Caratterizzazione
 
 Le radici dell'albero sperimentale. Ogni feedstock ha una sua anagrafica fissa.
 
@@ -24,7 +24,7 @@ Le radici dell'albero sperimentale. Ogni feedstock ha una sua anagrafica fissa.
     - TGA (Termogravimetria).
         
 
-## 2. 🔥 Fase 1: Pirolisi & DOE (Design of Experiments)
+## 2.  Fase 1: Pirolisi & DOE (Design of Experiments)
 
 Questa fase rappresenta la matrice di ottimizzazione principale.
 
@@ -59,7 +59,7 @@ Questa fase rappresenta la matrice di ottimizzazione principale.
     - Oli: GC-MS + Analisi Elementare.
         
 
-## 3. 💧 Fase 2: HTL & HTU (Hydrothermal Processing)
+## 3.  Fase 2: HTL & HTU (Hydrothermal Processing)
 
 L'upgrading e la valorizzazione in fase umida.
 
