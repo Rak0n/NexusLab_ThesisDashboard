@@ -152,7 +152,7 @@ Valorizzazione di scarti plastici e biomasse (fanghi) attraverso processi termoc
     with open(note_path, "r", encoding="utf-8") as f:
         content = f.read()
         
-    st.markdown("Usa questo spazio per tenere traccia della scaletta dei capitoli, dei ragionamenti o dei risultati principali.")
+    st.markdown("")
     new_content = st.text_area("Editor Markdown (salvataggio automatico):", value=content, height=450)
     
     if new_content != content:
