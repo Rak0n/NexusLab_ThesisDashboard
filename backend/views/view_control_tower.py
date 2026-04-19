@@ -57,8 +57,8 @@ def fetch_detailed_data(id_prova, processo, feed_string):
                         SELECT i.id_prova, p.tipo_processo
                         FROM input_idrotermico i
                         JOIN prove_idrotermiche p ON i.id_prova = p.id_prova
-                        WHERE i.source_id LIKE '%' || :id || '%'
-                    """), {"id": id_prova}
+                        WHERE i.source_id = :id OR i.source_id = :id_oil
+                    """), {"id": id_prova, "id_oil": f"{id_prova}_OIL"}
                 ).mappings().first()
                 if res_target:
                     details['lineage_target'] = dict(res_target)
@@ -242,7 +242,8 @@ def fetch_data():
                 p.temperatura as "TEMP (°C)", 
                 30 as "TEMPO (MIN)", 
                 GROUP_CONCAT(r.feedstock_id, ' + ') as "FEEDSTOCK",
-                p.catalizzatore as "CATALIZZATORE"
+                p.catalizzatore as "CATALIZZATORE",
+                (SELECT GROUP_CONCAT(DISTINCT tipo_analisi) FROM registro_analisi WHERE target_id = p.id_prova OR target_id LIKE p.id_prova || '\\_%' ESCAPE '\\') as "ANALISI"
             FROM prove_pirolisi p
             LEFT JOIN pirolisi_ricetta r ON p.id_prova = r.id_prova
             GROUP BY p.id_prova
@@ -255,7 +256,8 @@ def fetch_data():
                 i.temperatura as "TEMP (°C)", 
                 i.tempo as "TEMPO (MIN)", 
                 GROUP_CONCAT(inp.source_id, ' + ') as "FEEDSTOCK",
-                i.catalizzatore as "CATALIZZATORE"
+                i.catalizzatore as "CATALIZZATORE",
+                (SELECT GROUP_CONCAT(DISTINCT tipo_analisi) FROM registro_analisi WHERE target_id = i.id_prova OR target_id LIKE i.id_prova || '\\_%' ESCAPE '\\') as "ANALISI"
             FROM prove_idrotermiche i
             LEFT JOIN input_idrotermico inp ON i.id_prova = inp.id_prova
             GROUP BY i.id_prova
@@ -267,6 +269,7 @@ def fetch_data():
             
         df_db["FEEDSTOCK"] = df_db["FEEDSTOCK"].astype(str).str.replace("FS_", "", regex=False)
         df_db["CATALIZZATORE"] = df_db["CATALIZZATORE"].astype(str).str.replace("CAT_", "", regex=False)
+        df_db["ANALISI"] = df_db["ANALISI"].astype(str).str.replace(",", ", ")
         df_db['sort_key'] = df_db['ID PROVA'].str.extract(r'(\d+)').astype(float)
         df_db = df_db.sort_values(by=['PROCESSO', 'sort_key']).drop(columns=['sort_key']).reset_index(drop=True)
 
