@@ -1,5 +1,7 @@
 # NexusLab_ThesisDashboard
 
+https://nexuslabthesisdashboard-jzdocpapg2jvjv9zupbfdd.streamlit.app/
+
 # 🧪 NexusLab LIMS: Biorefinery & Chemical Recycling Data Workflow
 
 **NexusLab LIMS** (Laboratory Information Management System) è una piattaforma avanzata e interattiva progettata per la gestione, l'analisi e la visualizzazione dei dati nella ricerca sulle **Bioraffinerie e il Riciclo Chimico**.
