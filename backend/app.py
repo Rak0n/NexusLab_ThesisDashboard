@@ -62,8 +62,8 @@ elif st.session_state.current_view == "CHNSO":
     vchnso.render()
 
 elif st.session_state.current_view == "GC":
-    st.title("🟣 Dashboard GC Gas")
-    st.info("🚧 Modulo di Ingestione in costruzione")
+    import views.view_gc as vgc
+    vgc.render()
 
 elif st.session_state.current_view == "Deep Dive":
     import views.view_deepdive as vdeep
