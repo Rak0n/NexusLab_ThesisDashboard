@@ -20,14 +20,9 @@ def set_view(view_name):
 with st.sidebar:
     st.title("🧪 NexusLab")
     st.caption("Data Workflow & LIMS")
+    st.markdown("---")
     
-    # Sezione Documentazione (Nuova)
-    st.markdown("---")
-    st.subheader("📚 DOCUMENTAZIONE")
-    st.button("📖 Mappa Tesi", on_click=set_view, args=("Tesi",), use_container_width=True)
-
     # Sezione Database
-    st.markdown("---")
     st.subheader("📂 DATABASE")
     st.button("🏗️ Control Tower", on_click=set_view, args=("Control Tower",), use_container_width=True)
     st.button("🧫 Feedstocks", on_click=set_view, args=("Feedstocks",), use_container_width=True)
@@ -44,10 +39,6 @@ with st.sidebar:
 if st.session_state.current_view == "Control Tower":
     import views.view_control_tower as vct
     vct.render()
-
-elif st.session_state.current_view == "Tesi":
-    import views.view_thesis_map as vtesi
-    vtesi.render()
 
 elif st.session_state.current_view == "Feedstocks":
     st.title("🧫 Anagrafica Feedstocks")
@@ -68,3 +59,7 @@ elif st.session_state.current_view == "GC":
 elif st.session_state.current_view == "Deep Dive":
     import views.view_deepdive as vdeep
     vdeep.render()
+
+#elif st.session_state.current_view == "Tesi":
+    #import views.view_thesis_map as vtesi
+    #vtesi.render()
