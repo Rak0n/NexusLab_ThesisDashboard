@@ -25,8 +25,8 @@ with st.sidebar:
     # Sezione Database
     st.subheader("📂 DATABASE")
     st.button("🏗️ Control Tower", on_click=set_view, args=("Control Tower",), use_container_width=True)
-    st.button("🧫 Feedstocks", on_click=set_view, args=("Feedstocks",), use_container_width=True)
-    
+    st.button("🗺️ Mappa ", on_click=set_view, args=("Map View",), use_container_width=True)
+    st.button("⚙️ Data Vault (Editor)", on_click=set_view, args=("Data Vault",), use_container_width=True)
     st.markdown("---")
     
     # Sezione Motori di Analisi
@@ -40,9 +40,9 @@ if st.session_state.current_view == "Control Tower":
     import views.view_control_tower as vct
     vct.render()
 
-elif st.session_state.current_view == "Feedstocks":
-    st.title("🧫 Anagrafica Feedstocks")
-    st.info("🚧 Modulo in costruzione (Fase successiva)")
+elif st.session_state.current_view == "Map View":
+    import views.view_map as vmap
+    vmap.render()
 
 elif st.session_state.current_view == "GC-MS":
     import views.view_gcms as vgcms
@@ -60,6 +60,10 @@ elif st.session_state.current_view == "Deep Dive":
     import views.view_deepdive as vdeep
     vdeep.render()
 
-#elif st.session_state.current_view == "Tesi":
-    #import views.view_thesis_map as vtesi
-    #vtesi.render()
+elif st.session_state.current_view == "Multi Deep Dive":
+    import views.view_multi_deepdive as vmulti
+    vmulti.render()    
+
+elif st.session_state.current_view == "Data Vault":
+    import views.view_db_editor as vdb
+    vdb.render()    
