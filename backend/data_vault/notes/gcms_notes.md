@@ -1,76 +1,76 @@
 # Manifesto di Classificazione Molecolare (Dati GC-MS)
 
-**Progetto:** Upgrading Idrotermico e Pirolisi di Mix Complessi (PE, Mater-Bi, Sewage Sludge, Campione Reale) **Scopo del Documento:** Definire in modo rigoroso e riproducibile i criteri adottati per la classificazione, l'identificazione dei target ad alto valore aggiunto e l'esclusione degli artefatti analitici dai risultati GC-MS.
+**Progetto:** Upgrading Idrotermico e Pirolisi di Mix Complessi (PE, Mater-Bi, Sewage Sludge, Compost)
+
+**Scopo del Documento:** Definire in modo rigoroso e riproducibile i criteri adottati per la classificazione, l'identificazione dei target ad alto valore aggiunto e l'esclusione degli artefatti analitici dai risultati GC-MS.
 
 ## 1. Tabella Generale di Classificazione (Macro e Sub-Famiglie)
 
-I composti identificati dal database  con un Match Factor > 60 sono stati aggregati in classi chimiche in base ai loro gruppi funzionali dominanti.
+I composti identificati dal database NIST/Wiley con un Match Factor > 60 sono stati aggregati in classi chimiche in base ai loro gruppi funzionali dominanti. L'organizzazione prevede una netta distinzione tra i composti eteroatomici (O, N) e gli idrocarburi puri. I fenoli ad alto valore sono stati integrati all'interno della macroclasse dei composti ossigenati.
 
 |   |   |   |   |
 |---|---|---|---|
 |**Macro class**|**Class of compounds**|**Sorting criteria**|**Examples (from detected compounds)**|
-|**O-containing compounds**|**Acids**|Linear and cyclic molecules with detected carboxylic group|_Acetic acid; Propanoic acid; n-Hexadecanoic acid_|
+|**O-containing compounds**|**Phenols & O-Aromatics**|Aromatics containing oxygen (phenols, cresols, substituted phenols)|_Phenol; p-Cresol; Acetophenone_|
+||**Acids**|Linear and cyclic molecules with detected carboxylic group|_Acetic acid; Propanoic acid; n-Hexadecanoic acid_|
 ||**Alcohols**|Linear and cyclic molecules with detected alcoholic group|_1-Butanol; Behenic alcohol; n-Tetracosanol-1_|
-||**Ketones**|Molecules with detected ketonic group|_Cyclopentanone; 4-Propoxy-2-butanone_|
-||**Esters**|Molecules with detected ester group|_10-Octadecenoic acid, methyl ester; Ethyl Oleate_|
-||**Aldehydes**|Molecules with detected aldehydic group|_17-Octadecenal; E-14-Hexadecenal_|
+||**Carbonyls (Aldehydes & Ketones)**|Molecules with detected ketonic or aldehydic group|_Cyclopentanone; 17-Octadecenal; Phorone_|
+||**Esters**|Molecules with detected ester group|_10-Octadecenoic acid, methyl ester; Butenyl adipate_|
+||**Ethers**|Molecules with detected ether linkage (excluding PEGs)|_Ether, tert-butyl isopropylidenecyclopropyl_|
 ||**Furan derivatives**|Molecules containing a furan ring|_2-Furanmethanol; 4-Amino-4,5-dihydro-2(3H)-furanone_|
 |**N-containing compounds**|**Amides**|Molecules with detected amide group|_Acetamide; Benzamide; Hexanamide_|
 ||**Amines**|Molecules with detected aminic group|_1,2-Ethanediamine, N-(2-aminoethyl)-_|
-||**N-Rings**|Cyclic molecules containing nitrogen (non-aromatic)|_2-Pyrrolidinone; Glutarimide_|
-|**Aromatics**|**Aromatics**|Molecules that contain at least one benzene ring|_Benzene, 1,3-bis(1,1-dimethylethyl)-_|
-||**O-Aromatics**|Aromatics containing oxygen (e.g., phenols)|_Phenol; p-Cresol; Acetophenone_|
-||**N-Aromatics**|Aromatics containing nitrogen|_2(1H)-Pyrazinone; Benzonitrile, 4-methyl-_|
-|**Hydrocarbons**|**Alkanes**|Linear and branched saturated hydrocarbons|_Eicosane; Octadecane; Hexadecane_|
-||**Alkenes**|Linear and branched unsaturated hydrocarbons|_1-Octadecene; 9-Tricosene; Cetene_|
-||**Cycloalkanes**|Cyclic saturated hydrocarbons|_Cyclohexadecane; Cyclopentadecane_|
+||**Nitriles**|Molecules containing a cyano group|_Heptadecanenitrile_|
+||**N-Heterocycles (Rings & Aromatics)**|Cyclic molecules containing nitrogen (aromatic and non-aromatic)|_2-Pyrrolidinone; Imidazole; 2(1H)-Pyrazinone; Benzonitrile_|
+|**Hydrocarbons**|**Aliphatic hydrocarbons**|Linear, branched, and cyclic saturated/unsaturated hydrocarbons|_Eicosane; 1-Octadecene; Cyclohexadecane; Docosane, 7-hexyl-_|
+||**Aromatic hydrocarbons**|Molecules that contain at least one benzene ring (pure hydrocarbons)|_Benzene, 1,3-bis(1,1-dimethylethyl)-; Styrene; Ethylbenzene_|
 
-## 2. Regole di Assegnazione (Sorting Rules)
+## 2. Regole di Assegnazione Gerarchica (Sorting Rules)
 
-Per garantire oggettività e scalabilità nell'analisi dei dati, l'assegnazione dei composti alle classi riportate nella Tabella 1 avviene in modo automatico (tramite script Python nel database SQL) ricercando pattern specifici, suffissi o stringhe nel nome IUPAC/comune della molecola. L'ordine di applicazione delle regole è gerarchico (dal più stringente al più generico).
+Per garantire oggettività e scalabilità, l'assegnazione dei composti alle classi avviene in automatico ricercando pattern specifici nel nome IUPAC. L'ordine descritto di seguito ricalca la struttura della tabella. _(Nota tecnica: a livello di esecuzione del codice Python, i composti azotati e i fenoli vengono scansionati con priorità rispetto ai restanti composti ossigenati. Questo evita false classificazioni per molecole miste, garantendo ad esempio che il `2-Pyrrolidinone` venga etichettato come eterociclo azotato e non come un semplice chetone)._
 
-1. **Ricerca Composti Aromatici (Priorità Alta)**
+1. **Esclusione Contaminanti (Priorità Assoluta)**
     
-    - Se il nome contiene `phenol`, `cresol` o `acetophenone` $\rightarrow$ **O-Aromatics**
+    - Se il nome contiene `siloxane`, `silane` o `tms` $\rightarrow$ **Contaminants / Siloxanes**
         
-    - Se il nome contiene `nitrile`, `pyridine` o `benzonitrile` $\rightarrow$ **N-Aromatics**
+    - Se il nome si riferisce a eteri di glicole complessi (es. `glycol ... ether`) o eteri corona (`crown`) $\rightarrow$ **Contaminants / PEG & Surfactants**
         
-    - Se il nome contiene `benzene` (ma non contiene `acid` o `ester`) $\rightarrow$ **Aromatics**
-        
-2. **Ricerca Composti Azotati (N-containing)**
+2. **Ricerca Composti Ossigenati (O-containing)**
     
-    - Se il nome contiene la stringa `amide` $\rightarrow$ **Amides**
+    - Se contiene `phenol`, `cresol` o `acetophenone` $\rightarrow$ **O-containing compounds / Phenols & O-Aromatics**
         
-    - Se il nome contiene le stringhe `amine` o `amino` $\rightarrow$ **Amines**
+    - Se contiene `acid` $\rightarrow$ **O-containing compounds / Acids**
         
-    - Se il nome contiene `pyrroli`, `imide`, `indole` o `pyraz` $\rightarrow$ **N-Rings**
+    - Se contiene `furan` o `furfural` $\rightarrow$ **O-containing compounds / Furan derivatives**
         
-3. **Ricerca Composti Ossigenati (O-containing)**
+    - Se contiene suffissi/termini di esterificazione (`ester`, `oleate`, `propionate`, `carboxylate`, `adipate`, `sebacate`, ecc.) $\rightarrow$ **O-containing compounds / Esters**
+        
+    - Se contiene `one`, `phorone`, finisce in `al`, o contiene `aldehyde` o `dial` $\rightarrow$ **O-containing compounds / Carbonyls (Aldehydes & Ketones)**
+        
+    - Se contiene `ol`, `alcohol`, `diol` o `glycol` $\rightarrow$ **O-containing compounds / Alcohols**
+        
+    - Se contiene suffissi eterei (`ether`, `epoxy`, `methoxy`, `ethoxy`, `propoxy`) $\rightarrow$ **O-containing compounds / Ethers**
+        
+3. **Ricerca Composti Azotati (N-containing)**
     
-    - Se il nome contiene `acid` $\rightarrow$ **Acids**
+    - Se contiene `amide` $\rightarrow$ **N-containing compounds / Amides**
         
-    - Se il nome contiene `furan` $\rightarrow$ **Furan derivatives**
+    - Se contiene `amine` o `amino` $\rightarrow$ **N-containing compounds / Amines**
         
-    - Se il nome contiene `ester`, `oleate`, `propionate` o `carboxylate` $\rightarrow$ **Esters**
+    - Se contiene `nitrile` $\rightarrow$ **N-containing compounds / Nitriles**
         
-    - Se il nome contiene `one` (escludendo i lattoni) $\rightarrow$ **Ketones**
+    - Se contiene eterocicli azotati o N-aromatici (`pyrroli`, `imide`, `indole`, `pyraz`, `oxadiazole`, `pyrimidin`, `pyridine`, `benzonitrile`) $\rightarrow$ **N-containing compounds / N-Heterocycles (Rings & Aromatics)**
         
-    - Se il nome finisce in `al` o contiene `aldehyde` o `dial` $\rightarrow$ **Aldehydes**
-        
-    - Se il nome contiene `ol`, `alcohol`, `diol` o `glycol` $\rightarrow$ **Alcohols**
-        
-4. **Ricerca Idrocarburi (Hydrocarbons)**
+4. **Ricerca Idrocarburi Puri (Hydrocarbons)**
     
-    - Se il nome contiene `cyclo` e finisce in `ane` $\rightarrow$ **Cycloalkanes**
+    - Se contiene `benzene`, `styrene` o `ethylbenzene` (e non è stato intercettato prima da ossigenati/azotati) $\rightarrow$ **Hydrocarbons / Aromatic hydrocarbons**
         
-    - Se il nome finisce in `ane` $\rightarrow$ **Alkanes**
-        
-    - Se il nome finisce in `ene`, `diene` o contiene `cetene` $\rightarrow$ **Alkenes**
+    - Se contiene radici sature/insature generiche o cicliche (`ane`, `ene`, `diene`, `cyclo`, `cetene`, `squalene`) $\rightarrow$ **Hydrocarbons / Aliphatic hydrocarbons**
         
 
 ## 3. Molecole Valorizzabili (Platform Chemicals Targets)
 
-In ottica di bioraffineria e circolarità, alcuni composti non vengono considerati semplici costituenti dell'olio, ma potenziali "Platform Chemicals". Questi composti (estratti in automatico e dotati di flag `is_valuable` nel database) giustificano possibili step di separazione post-processo.
+Alcuni composti sono estratti in automatico e dotati di flag `is_valuable` nel database, giustificando possibili step di separazione per il recupero materia.
 
 |   |   |   |
 |---|---|---|
@@ -83,42 +83,41 @@ In ottica di bioraffineria e circolarità, alcuni composti non vengono considera
 
 ## 4. Contaminanti e Artefatti Analitici (Da escludere)
 
-I seguenti gruppi di composti vengono identificati dal sistema ma **esclusi** dal calcolo delle aree percentuali normalizzate (`Area %`), in quanto non rappresentativi dei prodotti di conversione del feedstock, bensì artefatti della procedura analitica GC-MS o additivi spuri.
+I seguenti composti ricevono il flag `is_contaminant = True` e non partecipano al bilancio di massa della miscela (normalizzazione dell'Area %).
 
-- **Silossani (Column Bleed):** Composti derivanti dalla degradazione termica della fase stazionaria della colonna cromatografica o da contaminazione da grasso siliconico.
+- **Silossani e Derivati TMS (Column Bleed / Derivatizzazione):** Composti derivanti dalla degradazione termica della fase stazionaria (es. _Tetracosamethyl-cyclododecasiloxane_, _Heptasiloxane_) o silani anomali.
     
-    - _Pattern di riconoscimento:_ `siloxane` (es. _Tetracosamethyl-cyclododecasiloxane_, _Heptasiloxane_).
-        
-- **Derivati TMS e Silani:** Prodotti di reazioni di derivatizzazione o contaminazioni.
+- **PEG e Tensioattivi (Surfactants):** Composti polietossilati o eteri corona (es. _Octaethylene glycol monododecyl ether_, _21-Crown-7_) riconducibili a contaminazione da detergenti di laboratorio o agenti bagnanti.
     
-    - _Pattern di riconoscimento:_ `tms`, `silane` (es. _2,5-Dihydroxybenzoic acid, 3TMS derivative_).
-        
 
-_(Tutte le molecole corrispondenti a questi pattern ricevono il flag `is_contaminant = True` nel database e non partecipano al bilancio di massa della miscela)._
+## 5. Selezione e Tracciamento dei Marker Specifici (Feedstock Tracking)
 
-## 5. Selezione e Tracciamento dei Marker Specifici e Logiche HTU
+I profili GC-MS dei componenti puri (Bianchi) sono utilizzati per identificare composti traccianti univoci (**Marker**) nei mix finali.
 
-Per comprendere le interazioni sinergiche nei mix e le trasformazioni di upgrading, i profili GC-MS dei singoli componenti puri (Bianchi) vengono utilizzati per identificare composti traccianti univoci (**Marker**).
+### A. Marker Mater-Bi (Frazione PBAT + Frazione Amido)
 
-### Caso Studio: Tracciamento del Mater-Bi (MB)
+Il Mater-Bi puro degrada nei frammenti primari dei suoi polimeri costituenti.
 
-Il Mater-Bi è tipicamente una miscela di **PBAT** (polibutilene adipato tereftalato) e **TPS** (amido termoplastico). Dalla pirolisi del MB puro emergono marker inconfondibili che permettono di tracciarne la presenza nei mix e di valutarne l'evoluzione durante l'Hydrothermal Upgrading (HTU).
-
-1. **Marker della Frazione PBAT (Biopoliestere):** Durante la pirolisi, il PBAT subisce scissione formando esteri monomerici e oligomerici complessi.
+- _Target PBAT (Poliestere):_ Esteri dell'acido adipico (`3-Butenyl adipate`), tereftalico (`Terephthalic acid, di(but-3-enyl) ester`), sebacico o succinico.
     
-    - _Target:_ Esteri dell'acido adipico (`3-Butenyl adipate`), dell'acido tereftalico (`Terephthalic acid, di(but-3-enyl) ester`), del sebacato e del succinato.
-        
-    - _Regola di Riconoscimento:_ Presenza di `adipate`, `terephthalate`, `sebacic` o `succinic` nel nome.
-        
-2. **Marker della Frazione Amido/Carboidrati (TPS):** La disidratazione e degradazione dei polisaccaridi genera strutture furaniche e ciclopentanoniche.
+- _Target TPS (Amido):_ Derivati di disidratazione degli zuccheri (`5-Hydroxymethylfurfural`, `3-Furaldehyde`).
     
-    - _Target:_ `5-Hydroxymethylfurfural` (HMF), `3-Furaldehyde`.
-        
-    - _Regola di Riconoscimento:_ Presenza di `furan`, `furfural` o `furaldehyde` nel nome.
-        
-
-**Regole di Trasformazione (Da Pirolisi a HTL/HTU):** In ottica di upgrading, la presenza di acqua in condizioni subcritiche/supercritiche (HTU) altera radicalmente il destino di questi marker primari:
-
-- **Evoluzione PBAT:** L'acqua ad alta temperatura promuove l'idrolisi degli esteri complessi (es. _Butenyl adipate_). Nel biocrude HTL/HTU ci si attende la scomparsa degli esteri pesanti e la formazione dei monomeri acidi liberi (es. _Adipic acid_, _Terephthalic acid_), i quali possono in parte subire decarbossilazione termica, riducendo l'O/C ratio.
+- **Trasformazione (HTU):** Scomparsa degli esteri pesanti verso monomeri acidi liberi (decarbossilazione) e degradazione in fase acquosa o polimerizzazione dei furanici.
     
-- **Evoluzione Amido:** I composti furanici primari (HMF) sono intermedi reattivi. In ambiente idrotermico, essi degradano rapidamente in acidi organici più leggeri e stabili (es. Acido Levulinico, Formico, Acetico) che migrano in fase acquosa, oppure polimerizzano formando _char_ o _humins_. Pertanto, la loro scomparsa nell'olio HTU è un indicatore di reazione avvenuta.
+
+### B. Marker Polietilene (PE)
+
+La degradazione termica radicalica del PE produce una inconfondibile serie omologa.
+
+- _Target Alifatici Pesanti:_ Serie continua di alcani e alcheni lineari pesanti (C20-C29), es. Eicosano, Docosano, Pentacosano, 1-Eicosene.
+    
+- **Trasformazione (HTU):** Estrema inerzia chimica. I frammenti del PE agiscono da carrier nel biocrude, aumentandone l'HHV e riducendo l'O/C ratio per "diluizione".
+    
+
+### C. Marker Sewage Sludge (SS)
+
+Derivando da biomassa microbica cellulare, il fango genera composti unici da proteine e lipidi.
+
+- _Target Azotati (Proteine):_ Composti eterociclici azotati e N-aromatici (`Indole`, `Pyrrole`, `Tryptamine`) e nitrili lunghi (`Heptadecanenitrile`).
+    
+- **Trasformazione (HTU):** La diminuzione percentuale degli eterocicli azotati nel biocrude (migrazione come NH3 in acqua o gas) indica l'efficacia della denitrificazione termochimica/catalitica.
