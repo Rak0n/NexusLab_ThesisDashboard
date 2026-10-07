@@ -45,16 +45,19 @@ def get_html_mermaid():
                         O_P5{{"Olio P5<br/>550°C - 50%PL"}}:::inter
                         O_P4{{"Olio P4<br/>550°C - 20%PL"}}:::inter
                         O_P2{{"Olio P2<br/>480°C - 30%PL"}}:::inter
+                        O_P10{{"Olio P10<br/>519°C - 51% PL"}}:::inter
                         O_P15{{"Olio P15<br/>450°C - 100%MB"}}:::inter
                         O_P13{{"Olio P13<br/>450°C - 100%PE"}}:::inter
                     end
 
                     subgraph G_HTU [FASE 3: UPGRADING OLI]
-                        HTU_7_8["HTU 7 & HTU 8<br/>Temp: 330 °C | Tempo: 180 min<br/>Cat: Nessuno (7) | CoMo+Zn (8)<br/>Resa: 13.5% | 17.6%<br/>HHV: 36.7 | 37.6 MJ/kg"]:::htu
+                        HTU_7_8["HTU 7 & HTU 8<br/>Temp: 330 °C | Tempo: 180 min<br/>Cat: Nessuno (7) | CoMo+Zn (8)<br/>Resa: 13.5% | 17.6%<br/>"]:::htu
                         
                         HTU_9_10["HTU 9 & HTU 10<br/>Temp: 330 °C | Tempo: 30 min<br/>Catalizzatore: Nessuno<br/>Resa: 33.2% (9) | 32.1% (10)<br/>HHV: 35.9 (9) | 38.4 (10) MJ/kg"]:::htu
                         
                         HTU_11_12["HTU 11, 12 & 13<br/>Temp: 330 °C | Tempo: 30 min<br/>Catalizzatore: Nessuno<br/>Resa: 27.3% (11) | 59.0% (12)<br/>HHV: 29.4 (11) | 46.8 (12) MJ/kg"]:::htu
+
+                        HTU_17_18["HTU 17 & HTU 18<br/>Temp: 330 °C | Tempo: 180 min<br/>Cat: Nessuno (7) | CoMo+Zn (8)<br/>Resa: 29.5% | 30.63%<br/>HHV: 36.7 | 37.6 MJ/kg"]:::htu
                     end
 
                     FEED -->|Enea DoE| P_DOE
@@ -66,12 +69,15 @@ def get_html_mermaid():
                     P_DOE --> O_P4
                     P_DOE --> O_P2
                     
+                    P_OPT --> O_P10
+                    
                     P_EXT --> O_P15
                     P_EXT --> O_P13
 
                     O_P5 --> HTU_7_8
                     O_P4 --> HTU_9_10
                     O_P2 --> HTU_9_10
+                    O_P10 --> HTU_17_18
                     O_P15 --> HTU_11_12
                     O_P13 --> HTU_11_12
                     
