@@ -57,7 +57,7 @@ def get_html_mermaid():
                         
                         HTU_11_12["HTU 11, 12 & 13<br/>Temp: 330 °C | Tempo: 30 min<br/>Catalizzatore: Nessuno<br/>Resa: 27.3% (11) | 59.0% (12)<br/>HHV: 29.4 (11) | 46.8 (12) MJ/kg"]:::htu
 
-                        HTU_17_18["HTU 17 & HTU 18<br/>Temp: 330 °C | Tempo: 180 min<br/>Cat: Nessuno (7) | CoMo+Zn (8)<br/>Resa: 29.5% | 30.63%<br/>HHV: 36.7 | 37.6 MJ/kg"]:::htu
+                        HTU_17_18["HTU 17 & HTU 18<br/>Temp: 330 °C | Tempo: 180 min<br/>Cat: Nessuno (17) | CoMo+Zn (18)<br/>Resa: 29.5% | 30.63%<br/>HHV: 36.7 | 37.6 MJ/kg"]:::htu
                     end
 
                     FEED -->|Enea DoE| P_DOE
